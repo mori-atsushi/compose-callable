@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "compose-callable"
-include(":app")
  
