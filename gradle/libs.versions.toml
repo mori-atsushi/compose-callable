@@ -2,6 +2,8 @@
 agp = "8.8.1"
 compose = "1.7.3"
 kotlin = "2.1.10"
+ktlint = "1.5.0"
+spotless = "7.0.2"
 
 [libraries]
 
@@ -10,3 +12,4 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
