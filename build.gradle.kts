@@ -18,7 +18,6 @@ allprojects {
             val ktlintVersion = libs.versions.ktlint.get()
             targetExclude("**/build/**/*.kt")
             ktlint(ktlintVersion)
-                .setEditorConfigPath(rootProject.file(".editorconfig"))
         }
     }
 }

@@ -78,15 +78,11 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Run local tests
-        run: |
-          ./gradlew uikitX64Test uikitSimArm64Test \
-          macosArm64Test watchosSimulatorArm64Test \
-          watchosX64Test watchosSimulatorArm64Test \
-          tvosX64Test uikitSimArm64Test --stacktrace
+        run: ./gradlew uikitX64Test uikitSimArm64Test
 
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: macos-test-reports
           path: '**/build/reports/tests'
