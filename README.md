@@ -3,9 +3,10 @@
 This library is heavily inspired by [react-call](https://github.com/desko27/react-call).
 
 ## Enhance Dialog Flow Readability
-In standard dialog components, the logic for displaying the dialog and handling the result are often
-far apart, making the flow difficult to follow.
-This library improves readability by using coroutines.
+
+In standard dialog components, the logic for displaying the dialog and handling its result is often
+separated, making the flow harder to follow.
+By leveraging coroutines, this library makes dialog flow more readable and maintainable.
 
 <table>
 <tr>
@@ -23,19 +24,16 @@ fun SampleScreen() {
     }
 
     message?.let {
-        AlertDialog(
-            onDismissRequest = { message = null },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        message = null
-                        // 2️⃣ Next step
-                    }
-                ) {
-                    Text("Confirm")
-                }
+        ConfirmDialog(
+            onDismissRequest = {
+                message = null
+                // 2️⃣ Next step (Cancel)
             },
-            text = { Text(it) },
+            confirmButtonClick = {
+                message = null
+                // 2️⃣ Next step (Confirm)
+            },
+            text = it,
         )
     }
 
@@ -61,22 +59,16 @@ fun SampleScreen() {
 ```kotlin
 @Composable
 fun SampleScreen() {
-    val state = remember {
+    val dialogState = remember {
         CallableState<String, Boolean>()
     }
     val coroutineScope = rememberCoroutineScope()
 
-    CallableHost(state) {
-        AlertDialog(
+    CallableHost(dialogState) {
+        ConfirmDialog(
             onDismissRequest = { resume(false) },
-            confirmButton = {
-                TextButton(
-                    onClick = { resume(true) },
-                ) {
-                    Text("Confirm")
-                }
-            },
-            text = { Text(it) },
+            confirmButtonClick = { resume(true) },
+            text = it,
         )
     }
 
@@ -88,7 +80,8 @@ fun SampleScreen() {
             onClick = {
                 coroutineScope.launch {
                     // 1️⃣ Show dialog
-                    val confirmed = state.call("Sure?")
+                    val confirmed =
+                        dialogState.call("Sure?")
                     // 2️⃣ Next step
                 }
             }
@@ -125,8 +118,9 @@ class SampleViewModel : ViewModel() {
 
     fun showDialog() {
         viewModelScope.launch {
+            // 1️⃣ Show dialog
             val confirmed = dialogState.call("Sure?")
-            // Next step
+            // 2️⃣ Next step
         }
     }
 }
