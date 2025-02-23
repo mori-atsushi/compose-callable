@@ -9,12 +9,12 @@ plugins {
   alias(libs.plugins.spotless) apply false
 }
 
-subprojects {
+allprojects {
   apply<SpotlessPlugin>()
 
   extensions.configure<SpotlessExtension> {
     kotlin {
-      target("**/*.kt")
+      target("**/*.kt", "**/*.kts")
       val ktlintVersion = libs.versions.ktlint.get()
       targetExclude("**/build/**/*.kt")
       ktlint(ktlintVersion)
