@@ -18,13 +18,7 @@ allprojects {
             val ktlintVersion = libs.versions.ktlint.get()
             targetExclude("**/build/**/*.kt")
             ktlint(ktlintVersion)
-                .editorConfigOverride(
-                    mapOf(
-                        "ktlint_code_style" to "android",
-                        "ij_kotlin_allow_trailing_comma" to true,
-                        "ij_kotlin_allow_trailing_comma_on_call_site" to true,
-                    ),
-                )
+                .setEditorConfigPath(rootProject.file(".editorconfig"))
         }
     }
 }
