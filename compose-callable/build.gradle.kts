@@ -23,20 +23,11 @@ kotlin {
     iosArm64("uikitArm64")
     iosSimulatorArm64("uikitSimArm64")
 
-    watchosArm64()
-    watchosArm32()
-    watchosX64()
-    watchosSimulatorArm64()
-    tvosArm64()
-    tvosX64()
-    tvosSimulatorArm64()
-    mingwX64()
-    linuxArm64()
-
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
+                implementation(compose.ui)
                 implementation(libs.kotlinx.coroutines)
             }
         }
