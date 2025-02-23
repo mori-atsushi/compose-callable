@@ -1,5 +1,12 @@
 package com.moriatsushi.copmose.callable
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+
 /**
  * The state of a callable component, such as a dialog, popup, or modal.
  */
@@ -7,4 +14,30 @@ interface CallableState<I, R> {
     val currentData: CallableData<I, R>?
 
     suspend fun call(input: I): R
+}
+
+fun <I, R> CallableState(): CallableState<I, R> = CallableStateImpl()
+
+private class CallableStateImpl<I, R> : CallableState<I, R> {
+    override var currentData: CallableData<I, R>? by mutableStateOf(null)
+        private set
+
+    override suspend fun call(input: I): R = try {
+        suspendCancellableCoroutine { continuation ->
+            currentData = CallableDataImpl(input, continuation)
+        }
+    } finally {
+        currentData = null
+    }
+}
+
+private class CallableDataImpl<I, R>(
+    override val input: I,
+    private val continuation: CancellableContinuation<R>,
+) : CallableData<I, R> {
+    override fun resume(result: R) {
+        if (continuation.isActive) {
+            continuation.resume(result)
+        }
+    }
 }
