@@ -1,6 +1,7 @@
 package com.moriatsushi.copmose.callable
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -34,5 +35,31 @@ class CallableStateTest {
         currentData.resume("result2")
 
         assertEquals("result1", deferred.await())
+    }
+
+    @Test
+    fun callableState_interrupted() = runTest {
+        val state = CallableState<String, String>()
+
+        backgroundScope.launch { state.call("input1") }
+        testScheduler.runCurrent()
+        assertEquals("input1", state.currentData?.input)
+
+        backgroundScope.launch { state.call("input2") }
+        testScheduler.runCurrent()
+        assertEquals("input2", state.currentData?.input)
+    }
+
+    @Test
+    fun callableState_cancel() = runTest {
+        val state = CallableState<String, String>()
+
+        val job = launch { state.call("input") }
+        testScheduler.runCurrent()
+        assertEquals("input", state.currentData?.input)
+
+        job.cancel()
+        testScheduler.runCurrent()
+        assertNull(state.currentData)
     }
 }
