@@ -29,7 +29,7 @@ fun SampleScreen() {
                 message = null
                 // 2️⃣ Next step (Cancel)
             },
-            confirmButtonClick = {
+            onConfirm = {
                 message = null
                 // 2️⃣ Next step (Confirm)
             },
@@ -67,7 +67,7 @@ fun SampleScreen() {
     CallableHost(dialogState) {
         ConfirmDialog(
             onDismissRequest = { resume(false) },
-            confirmButtonClick = { resume(true) },
+            onConfirm = { resume(true) },
             text = it,
         )
     }
