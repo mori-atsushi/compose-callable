@@ -29,7 +29,7 @@ fun SampleScreen() {
                 TextButton(
                     onClick = {
                         message = null
-                        // Next step
+                        // 2️⃣ Next step
                     }
                 ) {
                     Text("Confirm")
@@ -43,7 +43,12 @@ fun SampleScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        Button(onClick = { message = "Sure?" }) {
+        Button(
+            onClick = {
+                // 1️⃣ Show dialog
+                message = "Sure?"
+            }
+        ) {
             Text("Submit")
         }
     }
@@ -82,8 +87,9 @@ fun SampleScreen() {
         Button(
             onClick = {
                 coroutineScope.launch {
+                    // 1️⃣ Show dialog
                     val confirmed = state.call("Sure?")
-                    // Next step
+                    // 2️⃣ Next step
                 }
             }
         ) {
