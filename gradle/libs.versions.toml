@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.1"
+atomicfu = "0.23.2"
 compose = "1.7.3"
 compose-ui = "1.7.8"
 coroutines = "1.10.1"
@@ -24,5 +25,6 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinx-atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicfu" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
