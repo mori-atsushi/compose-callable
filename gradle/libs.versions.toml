@@ -1,10 +1,11 @@
 [versions]
 agp = "8.8.1"
+atomicfu = "0.23.2" # compose requires atomicfu 0.23.2
 compose = "1.7.3"
-compose-ui = "1.7.8"
-coroutines = "1.10.1"
+compose-ui = "1.7.6" # compose requires compose-ui 1.7.6
+coroutines = "1.9.0" # compose requires coroutines 1.9.0
 junit = "4.13.2"
-kotlin = "2.1.10"
+kotlin = "2.0.21" # atomicfu requires Kotlin 2.0
 ktlint = "1.5.0"
 publish = "0.30.0"
 robolectric = "4.14.1"
@@ -24,5 +25,6 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlinx-atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicfu" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

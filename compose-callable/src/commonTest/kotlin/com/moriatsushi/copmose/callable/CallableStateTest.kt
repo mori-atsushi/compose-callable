@@ -39,7 +39,7 @@ class CallableStateTest {
     }
 
     @Test
-    fun callableState_interrupted() = runTest {
+    fun callableState_conflict_CANCEL_AND_OVERWRITE() = runTest {
         val state = CallableState<String, String>()
 
         backgroundScope.launch { state.call("input1") }
@@ -54,6 +54,29 @@ class CallableStateTest {
         assertNotNull(data2)
         assertEquals("input2", data2.input)
         assertNotEquals(data1.key, data2.key)
+    }
+
+    @Test
+    fun callableState_conflict_ENQUEUE() = runTest {
+        val state = CallableState<String, String>(ConflictStrategy.ENQUEUE)
+
+        backgroundScope.launch { state.call("input1") }
+        testScheduler.runCurrent()
+        assertEquals("input1", state.currentData?.input)
+
+        backgroundScope.launch { state.call("input2") }
+        backgroundScope.launch { state.call("input3") }
+        testScheduler.runCurrent()
+        // Still processing the first call
+        assertEquals("input1", state.currentData?.input)
+
+        state.currentData?.resume("result1")
+        testScheduler.runCurrent()
+        assertEquals("input2", state.currentData?.input)
+
+        state.currentData?.resume("result2")
+        testScheduler.runCurrent()
+        assertEquals("input3", state.currentData?.input)
     }
 
     @Test
