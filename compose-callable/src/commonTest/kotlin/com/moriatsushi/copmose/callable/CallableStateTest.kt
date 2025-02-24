@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
@@ -43,11 +44,16 @@ class CallableStateTest {
 
         backgroundScope.launch { state.call("input1") }
         testScheduler.runCurrent()
-        assertEquals("input1", state.currentData?.input)
+        val data1 = state.currentData
+        assertNotNull(data1)
+        assertEquals("input1", data1.input)
 
         backgroundScope.launch { state.call("input2") }
         testScheduler.runCurrent()
-        assertEquals("input2", state.currentData?.input)
+        val data2 = state.currentData
+        assertNotNull(data2)
+        assertEquals("input2", data2.input)
+        assertNotEquals(data1.key, data2.key)
     }
 
     @Test
