@@ -1,6 +1,7 @@
 package com.moriatsushi.copmose.callable
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 
 @Composable
@@ -10,8 +11,10 @@ fun <I, R> CallableHost(
 ) {
     val currentData = state.currentData
     if (currentData != null) {
-        val scope = remember(currentData) { CallableHostScopeImpl(currentData) }
-        scope.content(currentData.input)
+        key(currentData.key) {
+            val scope = remember(currentData) { CallableHostScopeImpl(currentData) }
+            scope.content(currentData.input)
+        }
     }
 }
 

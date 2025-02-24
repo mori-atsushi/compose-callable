@@ -4,6 +4,8 @@ package com.moriatsushi.copmose.callable
  * An interface representing the data of a single callable component.
  */
 interface CallableData<out I, in R> {
+    val key: String
+
     val input: I
 
     /**

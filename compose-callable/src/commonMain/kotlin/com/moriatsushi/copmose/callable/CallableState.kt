@@ -11,6 +11,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.coroutineContext
 import kotlin.coroutines.resume
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * The state of a callable component, such as a dialog, popup, or modal.
@@ -41,7 +43,9 @@ private class CallableStateImpl<I, R> : CallableState<I, R> {
             currentJob = coroutineContext[Job]
         }
         suspendCancellableCoroutine { continuation ->
-            currentData = CallableDataImpl(input, continuation)
+            @OptIn(ExperimentalUuidApi::class)
+            val key = Uuid.random().toString()
+            currentData = CallableDataImpl(key, input, continuation)
         }
     } finally {
         currentData = null
@@ -50,6 +54,7 @@ private class CallableStateImpl<I, R> : CallableState<I, R> {
 }
 
 private class CallableDataImpl<I, R>(
+    override val key: String,
     override val input: I,
     private val continuation: CancellableContinuation<R>,
 ) : CallableData<I, R> {
