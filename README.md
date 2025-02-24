@@ -102,8 +102,29 @@ To include this library in your project, add the following dependency:
 
 ```kotlin
 dependencies {
-    implementation("com.moriatsushi.compose.callable:compose-callable:1.0.0-alpha01")
+    implementation("com.moriatsushi.compose.callable:compose-callable:1.0.0-alpha02")
 }
+```
+
+## Conflict Strategy
+
+When calling a component, there might already be an active call in progress.
+The library offers a configurable strategy for handling such conflicts, defined by the
+`ConflictStrategy` enum.
+You can choose one of the following strategies:
+
+* `ConflictStrategy.CANCEL_AND_OVERWRITE` (default):
+If a new call is made while another call is still active, the current call is canceled immediately,
+and the new call takes precedence.
+
+* `ConflictStrategy.ENQUEUE`:
+Instead of canceling the active call, the new call is enqueued. It will be processed only after the
+current call completes.
+
+You can specify the desired strategy when creating your `CallableState` instance:
+
+```kotlin
+val state = CallableState<String, Boolean>(ConflictStrategy.ENQUEUE)
 ```
 
 ## Using with ViewModel
