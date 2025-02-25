@@ -1,4 +1,4 @@
-package com.moriatsushi.copmose.callable
+package com.moriatsushi.compose.callable
 
 /**
  * An interface representing the data of a single callable component.

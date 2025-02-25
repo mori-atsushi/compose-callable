@@ -1,4 +1,4 @@
-package com.moriatsushi.copmose.callable
+package com.moriatsushi.compose.callable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.BasicText

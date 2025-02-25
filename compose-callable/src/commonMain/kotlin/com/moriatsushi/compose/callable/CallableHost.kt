@@ -1,4 +1,4 @@
-package com.moriatsushi.copmose.callable
+package com.moriatsushi.compose.callable
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
