@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     alias(libs.plugins.android.application)
@@ -13,7 +14,20 @@ kotlin {
     jvm("desktop")
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        browser()
+        moduleName = "compose-callable-sample"
+        browser {
+            commonWebpackConfig {
+                outputFileName = "compose-callable-sample.js"
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        // Serve sources to debug inside browser
+                        add(project.rootDir.path)
+                        add(project.projectDir.path)
+                    }
+                }
+            }
+        }
+        binaries.executable()
     }
     iosX64("uikitX64")
     iosArm64("uikitArm64")
@@ -24,7 +38,7 @@ kotlin {
             dependencies {
                 implementation(project(":compose-callable"))
                 implementation(compose.material3)
-                implementation(compose.uiTooling)
+                implementation(compose.components.resources)
             }
         }
         val androidMain by getting {
