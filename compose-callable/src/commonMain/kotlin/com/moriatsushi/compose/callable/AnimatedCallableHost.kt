@@ -32,40 +32,49 @@ fun <I, R> AnimatedCallableHost(
     val currentData = state.currentData
     val transition = updateTransition(currentData)
 
-    transition.AnimatedHost(
+    AnimatedHost(
+        transition = transition,
         modifier = modifier,
         enter = enter,
         exit = exit,
-        contentKey = { it?.key },
+        contentKey = { it.key },
         contentAlignment = contentAlignment,
     ) { targetData ->
-        if (targetData != null) {
-            key(targetData.key) {
-                val scope = remember(targetData) { CallableHostScopeImpl(targetData) }
-                scope.content(targetData.input)
-            }
+        key(targetData.key) {
+            val scope = remember(targetData) { CallableHostScopeImpl(targetData) }
+            scope.content(targetData.input)
         }
     }
 }
 
 @Composable
-private fun <S> Transition<S>.AnimatedHost(
+private fun <S : Any> AnimatedHost(
+    transition: Transition<S?>,
     modifier: Modifier,
     enter: EnterTransition = fadeIn() + expandIn(),
     exit: ExitTransition = fadeOut() + shrinkOut(),
-    contentKey: (targetState: S) -> Any? = { it },
+    contentKey: (targetState: S) -> Any = { it },
     contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable (targetState: S) -> Unit,
 ) {
-    val currentlyVisible = remember { mutableStateListOf(currentState) }
+    val currentState = transition.currentState
+    val targetState = transition.targetState
+    val currentlyVisible =
+        remember {
+            if (currentState != null) mutableStateListOf(currentState) else mutableStateListOf()
+        }
     val contentMap = remember { mutableScatterMapOf<S, @Composable () -> Unit>() }
 
-    if (!currentlyVisible.contains(currentState)) {
+    if (currentState == null) {
+        currentlyVisible.clear()
+    }
+
+    if (currentState != null && !currentlyVisible.contains(currentState)) {
         currentlyVisible.clear()
         currentlyVisible.add(currentState)
     }
 
-    if (currentState == targetState) {
+    if (currentState != null && currentState == targetState) {
         if (currentlyVisible.size != 1 || currentlyVisible[0] != currentState) {
             currentlyVisible.clear()
             currentlyVisible.add(currentState)
@@ -75,15 +84,21 @@ private fun <S> Transition<S>.AnimatedHost(
         }
     }
 
-    if (currentState != targetState && !currentlyVisible.contains(targetState)) {
+    if (
+        targetState != null &&
+        currentState != targetState &&
+        !currentlyVisible.contains(targetState)
+    ) {
         currentlyVisible.add(targetState)
     }
 
-    if (!contentMap.containsKey(targetState) || !contentMap.containsKey(currentState)) {
+    val needTargetContent = targetState != null && !contentMap.containsKey(targetState)
+    val needCurrentContent = currentState != null && !contentMap.containsKey(currentState)
+    if (needTargetContent || needCurrentContent) {
         contentMap.clear()
         currentlyVisible.fastForEach { stateForContent ->
             contentMap[stateForContent] = {
-                AnimatedVisibility(
+                transition.AnimatedVisibility(
                     visible = { it == stateForContent },
                     enter = enter,
                     exit = exit,
