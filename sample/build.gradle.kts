@@ -19,13 +19,15 @@ kotlin {
         browser {
             commonWebpackConfig {
                 outputFileName = "compose-callable-sample.js"
-                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
-                    static = (static ?: mutableListOf()).apply {
-                        // Serve sources to debug inside browser
-                        add(project.rootDir.path)
-                        add(project.projectDir.path)
+                devServer =
+                    (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                        static =
+                            (static ?: mutableListOf()).apply {
+                                // Serve sources to debug inside browser
+                                add(project.rootDir.path)
+                                add(project.projectDir.path)
+                            }
                     }
-                }
             }
         }
         binaries.executable()
@@ -40,7 +42,7 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = xcframeworkName
-            binaryOption("bundleId", "com.moriatsushi.compose.callable.${xcframeworkName}")
+            binaryOption("bundleId", "com.moriatsushi.compose.callable.$xcframeworkName")
             xcf.add(this)
             isStatic = true
         }
