@@ -1,5 +1,6 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
@@ -29,9 +30,21 @@ kotlin {
         }
         binaries.executable()
     }
-    iosX64("uikitX64")
-    iosArm64("uikitArm64")
-    iosSimulatorArm64("uikitSimArm64")
+
+    val xcframeworkName = "ComposeApp"
+    val xcf = XCFramework(xcframeworkName)
+    listOf(
+        iosX64("uikitX64"),
+        iosArm64("uikitArm64"),
+        iosSimulatorArm64("uikitSimArm64"),
+    ).forEach {
+        it.binaries.framework {
+            baseName = xcframeworkName
+            binaryOption("bundleId", "com.moriatsushi.compose.callable.${xcframeworkName}")
+            xcf.add(this)
+            isStatic = true
+        }
+    }
 
     sourceSets {
         val commonMain by getting {
