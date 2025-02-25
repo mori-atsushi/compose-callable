@@ -12,13 +12,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.util.fastForEach
 
 @Composable
 fun <I, R> AnimatedCallableHost(
@@ -29,11 +26,9 @@ fun <I, R> AnimatedCallableHost(
     contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable CallableHostScope<R>.(I) -> Unit,
 ) {
-    val currentData = state.currentData
-    val transition = updateTransition(currentData)
+    val transition = updateTransition(state.currentData)
 
-    AnimatedHost(
-        transition = transition,
+    transition.AnimatedHost(
         modifier = modifier,
         enter = enter,
         exit = exit,
@@ -48,8 +43,7 @@ fun <I, R> AnimatedCallableHost(
 }
 
 @Composable
-private fun <S : Any> AnimatedHost(
-    transition: Transition<S?>,
+private fun <S : Any> Transition<S?>.AnimatedHost(
     modifier: Modifier,
     enter: EnterTransition = fadeIn() + expandIn(),
     exit: ExitTransition = fadeOut() + shrinkOut(),
@@ -57,65 +51,26 @@ private fun <S : Any> AnimatedHost(
     contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable (targetState: S) -> Unit,
 ) {
-    val currentState = transition.currentState
-    val targetState = transition.targetState
-    val currentlyVisible =
-        remember {
-            if (currentState != null) mutableStateListOf(currentState) else mutableStateListOf()
-        }
-    val contentMap = remember { mutableScatterMapOf<S, @Composable () -> Unit>() }
-
-    if (currentState == null) {
-        currentlyVisible.clear()
-    }
-
-    if (currentState != null && !currentlyVisible.contains(currentState)) {
-        currentlyVisible.clear()
-        currentlyVisible.add(currentState)
-    }
-
-    if (currentState != null && currentState == targetState) {
-        if (currentlyVisible.size != 1 || currentlyVisible[0] != currentState) {
-            currentlyVisible.clear()
-            currentlyVisible.add(currentState)
-        }
-        if (contentMap.size != 1 || contentMap.containsKey(currentState)) {
-            contentMap.clear()
-        }
-    }
-
-    if (
-        targetState != null &&
-        currentState != targetState &&
-        !currentlyVisible.contains(targetState)
-    ) {
-        currentlyVisible.add(targetState)
-    }
-
-    val needTargetContent = targetState != null && !contentMap.containsKey(targetState)
-    val needCurrentContent = currentState != null && !contentMap.containsKey(currentState)
-    if (needTargetContent || needCurrentContent) {
-        contentMap.clear()
-        currentlyVisible.fastForEach { stateForContent ->
-            contentMap[stateForContent] = {
-                transition.AnimatedVisibility(
-                    visible = { it == stateForContent },
-                    enter = enter,
-                    exit = exit,
-                ) {
-                    DisposableEffect(this) {
-                        onDispose {
-                            currentlyVisible.remove(stateForContent)
-                        }
+    val currentlyVisible = setOfNotNull(currentState, targetState)
+    val contentMap =
+        remember(currentlyVisible) {
+            val contentMap = mutableScatterMapOf<S, @Composable () -> Unit>()
+            currentlyVisible.forEach { stateForContent ->
+                contentMap[stateForContent] = {
+                    AnimatedVisibility(
+                        visible = { it == stateForContent },
+                        enter = enter,
+                        exit = exit,
+                    ) {
+                        content(stateForContent)
                     }
-                    content(stateForContent)
                 }
             }
+            contentMap
         }
-    }
 
     Box(modifier = modifier, contentAlignment = contentAlignment) {
-        currentlyVisible.fastForEach {
+        currentlyVisible.forEach {
             key(contentKey(it)) {
                 contentMap[it]?.invoke()
             }
