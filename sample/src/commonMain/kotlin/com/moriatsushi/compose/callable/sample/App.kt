@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun Main(modifier: Modifier = Modifier) {
+fun App(modifier: Modifier = Modifier) {
     MaterialTheme {
         SampleScreen(modifier = modifier)
     }
