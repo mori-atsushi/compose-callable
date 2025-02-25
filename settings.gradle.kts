@@ -30,3 +30,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "compose-callable"
 include(":compose-callable")
+include(":sample")
