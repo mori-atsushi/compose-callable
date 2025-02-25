@@ -24,8 +24,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(compose.runtime)
-                implementation(compose.ui)
+                implementation(compose.foundation)
+                implementation(libs.androidx.collection)
                 implementation(libs.kotlinx.coroutines)
             }
         }

@@ -2,6 +2,7 @@
 activity = "1.9.3"
 agp = "8.8.1"
 atomicfu = "0.23.2" # compose requires atomicfu 0.23.2
+collection = "1.4.5"
 compose = "1.7.3"
 compose-ui = "1.7.6" # compose requires compose-ui 1.7.6
 coroutines = "1.9.0" # compose requires coroutines 1.9.0
@@ -14,6 +15,7 @@ spotless = "7.0.2"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+androidx-collection = { group = "androidx.collection", name = "collection", version.ref = "collection" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "compose-ui" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "compose-ui" }
 junit = { module = "junit:junit", version.ref = "junit" }
