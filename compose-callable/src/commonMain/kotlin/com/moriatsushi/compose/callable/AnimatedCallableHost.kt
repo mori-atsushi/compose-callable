@@ -16,6 +16,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.util.fastForEach
 
@@ -25,6 +26,7 @@ fun <I, R> AnimatedCallableHost(
     modifier: Modifier = Modifier,
     enter: EnterTransition = fadeIn() + expandIn(),
     exit: ExitTransition = fadeOut() + shrinkOut(),
+    contentAlignment: Alignment = Alignment.TopStart,
     content: @Composable CallableHostScope<R>.(I) -> Unit,
 ) {
     val currentData = state.currentData
@@ -35,6 +37,7 @@ fun <I, R> AnimatedCallableHost(
         enter = enter,
         exit = exit,
         contentKey = { it?.key },
+        contentAlignment = contentAlignment,
     ) { targetData ->
         if (targetData != null) {
             key(targetData.key) {
@@ -51,7 +54,8 @@ private fun <S> Transition<S>.AnimatedHost(
     enter: EnterTransition = fadeIn() + expandIn(),
     exit: ExitTransition = fadeOut() + shrinkOut(),
     contentKey: (targetState: S) -> Any? = { it },
-    content: @Composable (targetState: S) -> Unit
+    contentAlignment: Alignment = Alignment.TopStart,
+    content: @Composable (targetState: S) -> Unit,
 ) {
     val currentlyVisible = remember { mutableStateListOf(currentState) }
     val contentMap = remember { mutableScatterMapOf<S, @Composable () -> Unit>() }
@@ -95,7 +99,7 @@ private fun <S> Transition<S>.AnimatedHost(
         }
     }
 
-    Box(modifier = modifier) {
+    Box(modifier = modifier, contentAlignment = contentAlignment) {
         currentlyVisible.fastForEach {
             key(contentKey(it)) {
                 contentMap[it]?.invoke()
