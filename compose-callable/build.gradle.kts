@@ -55,7 +55,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.moriatsushi.copmose.callable"
+    namespace = "com.moriatsushi.compose.callable"
     compileSdk = 35
 
     defaultConfig {

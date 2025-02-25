@@ -1,4 +1,4 @@
-package com.moriatsushi.copmose.callable
+package com.moriatsushi.compose.callable
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
