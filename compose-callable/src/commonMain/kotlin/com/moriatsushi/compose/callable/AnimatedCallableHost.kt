@@ -2,6 +2,7 @@ package com.moriatsushi.compose.callable
 
 import androidx.collection.mutableScatterMapOf
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Transition
@@ -24,7 +25,7 @@ fun <I, R> AnimatedCallableHost(
     enter: EnterTransition = fadeIn() + expandIn(),
     exit: ExitTransition = fadeOut() + shrinkOut(),
     contentAlignment: Alignment = Alignment.TopStart,
-    content: @Composable CallableHostScope<R>.(I) -> Unit,
+    content: @Composable AnimatedCallableHostScope<R>.(I) -> Unit,
 ) {
     val transition = updateTransition(state.currentData)
 
@@ -35,11 +36,21 @@ fun <I, R> AnimatedCallableHost(
         contentKey = { it.key },
         contentAlignment = contentAlignment,
     ) { targetData ->
-        key(targetData.key) {
-            val scope = remember(targetData) { CallableHostScopeImpl(targetData) }
-            scope.content(targetData.input)
-        }
+        val scope = remember(targetData) { AnimatedCallableHostScopeImpl(targetData, this) }
+        scope.content(targetData.input)
     }
+}
+
+interface AnimatedCallableHostScope<in R> :
+    CallableHostScope<R>,
+    AnimatedVisibilityScope
+
+private class AnimatedCallableHostScopeImpl<in R>(
+    private val data: CallableData<*, R>,
+    private val animatedVisibilityScope: AnimatedVisibilityScope,
+) : AnimatedCallableHostScope<R>,
+    AnimatedVisibilityScope by animatedVisibilityScope {
+    override fun resume(result: R) = data.resume(result)
 }
 
 @Composable
@@ -49,7 +60,7 @@ private fun <S : Any> Transition<S?>.AnimatedHost(
     exit: ExitTransition = fadeOut() + shrinkOut(),
     contentKey: (targetState: S) -> Any = { it },
     contentAlignment: Alignment = Alignment.TopStart,
-    content: @Composable (targetState: S) -> Unit,
+    content: @Composable AnimatedVisibilityScope.(targetState: S) -> Unit,
 ) {
     val currentlyVisible = setOfNotNull(currentState, targetState)
     val contentMap =

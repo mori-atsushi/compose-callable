@@ -25,3 +25,9 @@ interface CallableHostScope<in R> {
      */
     fun resume(result: R)
 }
+
+private class CallableHostScopeImpl<in R>(
+    private val data: CallableData<*, R>,
+) : CallableHostScope<R> {
+    override fun resume(result: R) = data.resume(result)
+}
