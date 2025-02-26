@@ -1,6 +1,5 @@
 package com.moriatsushi.compose.callable
 
-import androidx.collection.mutableScatterMapOf
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
@@ -65,7 +64,7 @@ private fun <S : Any> Transition<S?>.AnimatedHost(
     val currentlyVisible = setOfNotNull(currentState, targetState)
     val contentMap =
         remember(currentlyVisible) {
-            val contentMap = mutableScatterMapOf<S, @Composable () -> Unit>()
+            val contentMap = mutableMapOf<S, @Composable () -> Unit>()
             currentlyVisible.forEach { stateForContent ->
                 contentMap[stateForContent] = {
                     AnimatedVisibility(
