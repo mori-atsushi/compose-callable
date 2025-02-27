@@ -106,6 +106,26 @@ dependencies {
 }
 ```
 
+## Animation
+
+This library includes an `AnimatedCallableHost` component that allows you to animate component
+calls.
+
+Below is an example which shows a notification at the bottom of the screen with a slide-in
+animation.
+
+```kotlin
+AnimatedCallableHost(
+    modifier = Modifier.fillMaxSize(),
+    state = screenState.bottomNotificationState,
+    enter = fadeIn() + slideInVertically { it },
+    exit = fadeOut() + slideOutVertically { it },
+    contentAlignment = Alignment.BottomCenter,
+) {
+    BottomNotification(text = it, onResult = ::resume)
+}
+```
+
 ## Conflict Strategy
 
 When calling a component, there might already be an active call in progress.
