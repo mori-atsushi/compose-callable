@@ -26,6 +26,12 @@ interface CallableHostScope<in R> {
     fun resume(result: R)
 }
 
+/**
+ * Closes the component without returning any result.
+ * @see [CallableHostScope.resume]
+ */
+fun CallableHostScope<Unit>.resume() = resume(Unit)
+
 private class CallableHostScopeImpl<in R>(
     private val data: CallableData<*, R>,
 ) : CallableHostScope<R> {
