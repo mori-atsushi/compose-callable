@@ -32,12 +32,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moriatsushi.compose.callable.CallableHost
 import com.moriatsushi.compose.callable.sample.component.ConfirmDialog
+import com.moriatsushi.compose.callable.sample.component.YesNoDialog
 
 @Composable
 internal fun SampleScreen(modifier: Modifier = Modifier) {
     val coroutineScope = rememberCoroutineScope()
     val screenState = remember { SampleScreenState(coroutineScope) }
 
+    CallableHost(screenState.yesNoDialogState) {
+        YesNoDialog(
+            text = it,
+            onResult = ::resume,
+        )
+    }
     CallableHost(screenState.confirmDialogState) {
         ConfirmDialog(
             text = it,
