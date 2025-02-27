@@ -102,7 +102,27 @@ To include this library in your project, add the following dependency:
 
 ```kotlin
 dependencies {
-    implementation("com.moriatsushi.compose.callable:compose-callable:1.0.0-alpha03")
+    implementation("com.moriatsushi.compose.callable:compose-callable:1.0.0-beta01")
+}
+```
+
+## Animation
+
+This library includes an `AnimatedCallableHost` component that allows you to animate component
+calls.
+
+Below is an example which shows a notification at the bottom of the screen with a slide-in
+animation.
+
+```kotlin
+AnimatedCallableHost(
+    modifier = Modifier.fillMaxSize(),
+    state = screenState.bottomNotificationState,
+    enter = fadeIn() + slideInVertically { it },
+    exit = fadeOut() + slideOutVertically { it },
+    contentAlignment = Alignment.BottomCenter,
+) {
+    BottomNotification(text = it, onResult = ::resume)
 }
 ```
 
