@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.moriatsushi.compose.callable.AnimatedCallableHost
 import com.moriatsushi.compose.callable.CallableHost
+import com.moriatsushi.compose.callable.resume
 import com.moriatsushi.compose.callable.sample.component.BottomNotification
 import com.moriatsushi.compose.callable.sample.component.ConfirmDialog
 import com.moriatsushi.compose.callable.sample.component.Toast
@@ -37,10 +38,7 @@ internal fun SampleScreen(modifier: Modifier = Modifier) {
     }
 
     CallableHost(screenState.confirmDialogState) {
-        ConfirmDialog(
-            text = it,
-            onConfirm = { resume(Unit) },
-        )
+        ConfirmDialog(text = it, onConfirm = ::resume)
     }
 
     Box(modifier = modifier) {
@@ -78,10 +76,7 @@ internal fun SampleScreen(modifier: Modifier = Modifier) {
                 resume(Unit)
             }
 
-            Toast(
-                text = it,
-                onClick = { resume(Unit) },
-            )
+            Toast(text = it, onClick = ::resume)
         }
     }
 }
