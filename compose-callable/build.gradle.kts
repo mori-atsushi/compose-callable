@@ -17,6 +17,7 @@ kotlin {
     wasmJs {
         browser()
     }
+
     iosX64("uikitX64")
     iosArm64("uikitArm64")
     iosSimulatorArm64("uikitSimArm64")
@@ -24,8 +25,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(compose.runtime)
-                implementation(compose.ui)
+                implementation(compose.foundation)
                 implementation(libs.kotlinx.coroutines)
             }
         }
