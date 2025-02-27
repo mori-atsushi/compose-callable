@@ -102,7 +102,7 @@ To include this library in your project, add the following dependency:
 
 ```kotlin
 dependencies {
-    implementation("com.moriatsushi.compose.callable:compose-callable:1.0.0-alpha03")
+    implementation("com.moriatsushi.compose.callable:compose-callable:1.0.0-beta01")
 }
 ```
 
