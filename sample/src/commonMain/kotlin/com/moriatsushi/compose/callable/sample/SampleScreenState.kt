@@ -12,16 +12,19 @@ internal class SampleScreenState(
 ) {
     val yesNoDialogState = CallableState<String, Boolean>()
     val confirmDialogState = CallableState<String, Unit>()
+    val bottomNotificationState = CallableState<String, Boolean>()
 
     var result: String? by mutableStateOf(null)
         private set
 
     fun call(target: CallableTarget) {
+        result = null
         coroutineScope.launch {
             result =
                 when (target) {
                     CallableTarget.YES_NO_DIALOG -> callYesNoDialog()
                     CallableTarget.CONFIRMATION_DIALOG -> callConfirmationDialog()
+                    CallableTarget.BOTTOM_NOTIFICATION -> callBottomNotification()
                 }
         }
     }
@@ -34,5 +37,10 @@ internal class SampleScreenState(
     private suspend fun callConfirmationDialog(): String {
         confirmDialogState.call("Please press the Confirm button.")
         return "Confirmed"
+    }
+
+    private suspend fun callBottomNotification(): String {
+        val result = bottomNotificationState.call("This is a bottom notification.")
+        return if (result) "Confirmed" else "Cancelled"
     }
 }
