@@ -13,16 +13,22 @@ internal class SampleScreenState(
     var selectedTarget by mutableStateOf(CallableTarget.CONFIRMATION_DIALOG)
         private set
 
-    val dialogState = CallableState<String, Boolean>()
+    val confirmDialogState = CallableState<String, Unit>()
 
     var result: String? by mutableStateOf(null)
         private set
 
     fun call() {
         coroutineScope.launch {
-            val confirmed = dialogState.call("Sure?")
-            result = if (confirmed) "Confirmed" else "Not confirmed"
+            result = when (selectedTarget) {
+                CallableTarget.CONFIRMATION_DIALOG -> callConfirmationDialog()
+            }
         }
+    }
+
+    private suspend fun callConfirmationDialog(): String {
+        confirmDialogState.call("Please press the Confirm button.")
+        return "Confirmed"
     }
 
     fun selectTarget(target: CallableTarget) {

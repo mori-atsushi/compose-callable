@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -20,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,17 +31,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.moriatsushi.compose.callable.CallableHost
+import com.moriatsushi.compose.callable.sample.component.ConfirmDialog
 
 @Composable
 internal fun SampleScreen(modifier: Modifier = Modifier) {
     val coroutineScope = rememberCoroutineScope()
     val screenState = remember { SampleScreenState(coroutineScope) }
 
-    CallableHost(screenState.dialogState) {
+    CallableHost(screenState.confirmDialogState) {
         ConfirmDialog(
-            onDismissRequest = { resume(false) },
-            onConfirm = { resume(true) },
             text = it,
+            onConfirm = { resume(Unit) },
         )
     }
 
@@ -127,21 +125,4 @@ private fun TargetSelector(
             }
         }
     }
-}
-
-@Composable
-private fun ConfirmDialog(
-    onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit,
-    text: String,
-) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Confirm")
-            }
-        },
-        text = { Text(text) },
-    )
 }
