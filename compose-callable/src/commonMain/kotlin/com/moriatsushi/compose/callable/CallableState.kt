@@ -38,6 +38,12 @@ interface CallableState<I, R> {
 }
 
 /**
+ * Calls the component without any input.
+ * @see [CallableState.call]
+ */
+suspend fun <R> CallableState<Unit, R>.call(): R = call(Unit)
+
+/**
  * Creates a new [CallableState] with the given [onConflict] strategy.
  *
  * @param I The type of the input passed to the callable component.
