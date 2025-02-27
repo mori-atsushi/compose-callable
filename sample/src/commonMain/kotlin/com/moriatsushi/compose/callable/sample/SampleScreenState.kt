@@ -10,6 +10,9 @@ import kotlinx.coroutines.launch
 internal class SampleScreenState(
     private val coroutineScope: CoroutineScope,
 ) {
+    var selectedTarget by mutableStateOf(CallableTarget.CONFIRMATION_DIALOG)
+        private set
+
     val dialogState = CallableState<String, Boolean>()
 
     var result: String? by mutableStateOf(null)
@@ -20,5 +23,9 @@ internal class SampleScreenState(
             val confirmed = dialogState.call("Sure?")
             result = if (confirmed) "Confirmed" else "Not confirmed"
         }
+    }
+
+    fun selectTarget(target: CallableTarget) {
+        selectedTarget = target
     }
 }
