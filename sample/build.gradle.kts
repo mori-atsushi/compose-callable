@@ -15,7 +15,7 @@ kotlin {
     jvm("desktop")
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        moduleName = "compose-callable-sample"
+        outputModuleName = "compose-callable-sample"
         browser {
             commonWebpackConfig {
                 outputFileName = "compose-callable-sample.js"

@@ -27,6 +27,9 @@ kotlin {
             dependencies {
                 implementation(compose.foundation)
                 implementation(libs.kotlinx.coroutines)
+                // WORKAROUND: It is temporarily required.
+                // https://github.com/Kotlin/kotlinx-atomicfu/issues/145
+                implementation(libs.kotlinx.atomicfu)
             }
         }
         val commonTest by getting {
